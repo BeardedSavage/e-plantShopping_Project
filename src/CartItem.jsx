@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeItem, updateQuantity } from './CartSlice';
-import handlePlantsClick from './ProductList';
 import './CartItem.css';
 
 const CartItem = ({ onContinueShopping }) => {
@@ -11,45 +10,43 @@ const CartItem = ({ onContinueShopping }) => {
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = (cart) => {
      let totalAmount = 0;
-     if (cart === "cart-item-quantity" ) {
-        item.quantity += ((item) => {
-            totalAmount += item.quantity;
-        });
-     }
+     cart.forEach(item => {
+      totalAmount += parseFloat(item.cost.replace('$', ''))  * item.quantity;
+    });
+    return totalAmount;
   };
 
-  const handleContinueShopping = (e) => {
-    dispatch(handlePlantsClick(e)); 
-    setShowPlant(true);
-  };
+   const handleContinueShopping = (e) => {
+         onContinueShopping(e);
+   };
 
   const handleCheckoutShopping = (e) => {
     alert('Functionality to be added for future reference');
   };
 
   const handleIncrement = (item) => {
-    dispatch(updateQuantity(item));
+    dispatch(updateQuantity({name: item.name, quantity: item.quantity +1}));
   };
 
   const handleDecrement = (item) => {
-   if (cart[item].quantity > 0) {
-   } else if (cart[item].quantity > 0) {
+   if (item.quantity > 1) {
+    dispatch(updateQuantity({name: item.name, quantity: item.quantity -1}));
+   } else {
     dispatch(removeItem(item));
    }
   };
 
-  const handleRemove = (item) => {
-    dispatch(removeItem(item));
-  };
+  const handleRemoveFromCart = (productName) => {
+    dispatch(removeItem({ name: productName }));
+    setAddedToCart(prevState => ({
+        ...prevState,
+        [productName.name]: false, // Re-enable the button for the removed item
+    }));
+};
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
-    let totalAmount = 0;
-     if (cart === "cart-item-cost" ) {
-        cart[item].quantity += ((item) => {
-            totalAmount += car[item].cost * cart[item].quantity;
-        });
-     }
+    return parseFloat(item.cost.replace('$', '')) * item.quantity;
   };
 
   return (
@@ -68,7 +65,7 @@ const CartItem = ({ onContinueShopping }) => {
                 <button className="cart-item-button cart-item-button-inc" onClick={() => handleIncrement(item)}>+</button>
               </div>
               <div className="cart-item-total">Total: ${calculateTotalCost(item)}</div>
-              <button className="cart-item-delete" onClick={() => handleRemove(item)}>Delete</button>
+              <button className="cart-item-delete" onClick={() => handleRemoveFromCart(item)}>Delete</button>
             </div>
           </div>
         ))}
