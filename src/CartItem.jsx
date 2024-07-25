@@ -11,18 +11,16 @@ const CartItem = ({ onContinueShopping }) => {
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = (cart) => {
      let totalAmount = 0;
-     if (cart === "cart-item-cost" ) {
+     if (cart === "cart-item-quantity" ) {
         item.quantity += ((item) => {
-            totalAmount += item.cost * item.quantity * .1;
+            totalAmount += item.quantity;
         });
      }
   };
 
   const handleContinueShopping = (e) => {
     dispatch(handlePlantsClick(e)); 
-    if (onContinueShopping) {
-        setShowPlants(true);
-    } 
+    setShowPlant(true);
   };
 
   const handleCheckoutShopping = (e) => {
@@ -31,30 +29,25 @@ const CartItem = ({ onContinueShopping }) => {
 
   const handleIncrement = (item) => {
     dispatch(updateQuantity(item));
-    if (cart[item].name && cart[item].quatity === 0) {
-        return;
-    } else if (cart[item].quantity > 0) {
-        dispatch(removeItem(item));
-    }
   };
 
   const handleDecrement = (item) => {
    if (cart[item].quantity > 0) {
+   } else if (cart[item].quantity > 0) {
     dispatch(removeItem(item));
    }
   };
 
   const handleRemove = (item) => {
     dispatch(removeItem(item));
-    dispatch(updateQuantity(item));
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
     let totalAmount = 0;
      if (cart === "cart-item-cost" ) {
-        item.quantity += ((item) => {
-            totalAmount += item.cost * item.quantity;
+        cart[item].quantity += ((item) => {
+            totalAmount += car[item].cost * cart[item].quantity;
         });
      }
   };
