@@ -250,9 +250,10 @@ function ProductList() {
     setShowCart(false);
   };
     const handleAddToCart = (product) => {
-        dispatchEvent(addItem(product));
-        setAddToCart((prevState) => ({
-            ...prevState, [product.name]: true,
+        dispatch(addItem(product));
+        setAddedToCart((prevState) => ({
+            ...prevState,
+            [product.name]: true, // Set the product name as key and value as true to indicate it's added to cart
         }));
     };
 
